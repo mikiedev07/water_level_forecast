@@ -1,7 +1,7 @@
 from django.urls import path
 
-from .views import *
+from .views import graph_view
 
 urlpatterns = [
-    path('data/', admin.site.urls),
+    path('graph/', graph_view, name='graph'),
 ]

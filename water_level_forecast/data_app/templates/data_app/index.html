@@ -1,0 +1,74 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Graph</title>
+<!--    <link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}">-->
+    <!-- Подключение библиотеки Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <!-- Создание элемента для графика -->
+    <div class="chart-container" style="width: 1500px; margin: auto;">
+        <canvas id="myChart"></canvas>
+    </div>
+
+    <!-- JavaScript код для создания графика -->
+    <script>
+        var ctx = document.getElementById('myChart').getContext('2d');
+        var myChart = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: {{ dates|safe }},
+                datasets: [{
+                    label: 'ExpSmoothing + ExpSmoothingForecast',
+                    data: {{ values|safe }},
+                    backgroundColor: 'rgba(255, 99, 132, 0.2)',
+                    borderColor: 'rgba(255, 99, 132, 1)',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: false,
+                        suggestedMin: 1604,  // Минимальное значение на оси y
+                        suggestedMax: 1606   // Максимальное значение на оси y
+                    }
+                },
+                plugins: {
+                    verticalLinePlugin: {
+                        xValue: '2022-06',  // Значение x-координаты для вертикальной линии
+                        lineColor: 'rgba(0, 0, 255, 0.5)',  // Цвет вертикальной линии
+                        lineWidth: 2  // Толщина вертикальной линии
+                    }
+                }
+            },
+            plugins: [{
+                id: 'verticalLinePlugin',
+                afterDraw: function (chart) {
+                    var linePlugin = chart.options.plugins.verticalLinePlugin;
+                    var ctx = chart.ctx;
+                    var xValue = '2022-6';
+                    var xScale = chart.scales['x'];
+                    var yScale = chart.scales['y'];
+                    var xPixel = xScale.getPixelForValue(xValue);
+                    var topMargin = chart.options.layout.padding.top;
+                    var bottomMargin = chart.options.layout.padding.bottom;
+                    var chartHeight = chart.height - topMargin - bottomMargin;
+
+                    ctx.save();
+                    ctx.beginPath();
+                    ctx.strokeStyle = linePlugin.lineColor;
+                    ctx.lineWidth = linePlugin.lineWidth;
+                    ctx.moveTo(xPixel, topMargin);
+                    ctx.lineTo(xPixel, topMargin + chartHeight);
+                    ctx.stroke();
+                    ctx.restore();
+                }
+            }]
+        });
+    </script>
+
+</body>
+</html>
