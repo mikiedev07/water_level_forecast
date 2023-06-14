@@ -28,3 +28,27 @@ class ExpSmoothingMetrics(models.Model):
 
     def __str__(self):
         return "Метрики"
+
+
+class GRUForecast(models.Model):
+    date = models.CharField(max_length=20)
+    value = models.FloatField()
+
+
+class GRUParams(models.Model):
+    lookback = models.PositiveIntegerField(verbose_name='Кол-во интервалов в прошлом')
+    delay = models.PositiveIntegerField(verbose_name='Кол-во интервалов в будущем')
+    step = models.PositiveIntegerField(verbose_name='Шаг')
+    batch_size = models.PositiveIntegerField(verbose_name='Размер пакета')
+    hidden_neurons = models.PositiveIntegerField(verbose_name="Кол-во скрытых нейронов в слое")
+    dropout = models.FloatField(verbose_name="Прореживание")
+    recurrent_dropout = models.FloatField(verbose_name="Рекуррентное Прореживание")
+    steps_per_epoch = models.PositiveIntegerField(verbose_name='Кол-во шагов в эпохе')
+    epochs = models.PositiveIntegerField(verbose_name="Кол-во эпох")
+
+
+class GRUMetrics(models.Model):
+    mae = models.FloatField(verbose_name="MAE", default=0)
+
+    def __str__(self):
+        return "Метрики"

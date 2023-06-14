@@ -1,5 +1,4 @@
 from django.shortcuts import render
-from django.http import JsonResponse, HttpResponse
 from datetime import datetime
 
 from .models import ExpSmoothing, ExpSmoothingForecast

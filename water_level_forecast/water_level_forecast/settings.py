@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'data_app',
     'django_extensions',
+    'users',
 ]
 
 MIDDLEWARE = [
@@ -139,3 +140,10 @@ GRAPH_MODELS = {
   'all_applications': True,
   'group_models': True,
 }
+
+# email config
+EMAIL_USE_TLS = True
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_HOST_USER = 'mikhail.kokori.2015@gmail.com'
+EMAIL_HOST_PASSWORD = 'wkutrjqwitpnxfxx'
+EMAIL_PORT = 587
