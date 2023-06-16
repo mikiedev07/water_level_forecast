@@ -39,7 +39,8 @@ def register(request):
                 mail_subject, message, to=[to_email]
             )
             email.send()
-            return HttpResponse('Please confirm your email address to complete the registration')
+            messages.success(request, 'Please confirm your email address to complete the registration')
+            return render(request, 'users/register.html', {'form': form})
     else:
         form = RegisterForm()
     return render(request, 'users/register.html', {'form': form})
