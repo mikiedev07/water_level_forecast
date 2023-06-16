@@ -1,9 +1,11 @@
 from django.shortcuts import render
 from datetime import datetime
+from django.contrib.auth.decorators import login_required
 
-from .models import ExpSmoothing, ExpSmoothingForecast
+from .models import ExpSmoothing, ExpSmoothingForecast, ExpSmoothingMetrics
 
 
+@login_required
 def graph_view(request):
     exp_smoothing_data = ExpSmoothing.objects.all()
     exp_smoothing_forecast_data = ExpSmoothingForecast.objects.all()
@@ -26,12 +28,14 @@ def graph_view(request):
     # labels = [dates[i] for i in range(len(dates)) if i % (365 * step) == 0]
     # print(dates)
     # print(range(len(dates)))
-
+    metrics_obj = ExpSmoothingMetrics.objects.first()
+    mae = round(metrics_obj.mae, 2)
     now = datetime.now()
 
     context = {
         'vert_line_x': f'{now.year}-{now.month}',
         'dates': dates + forecast_dates,
         'values': values + forecast_values,
+        'mae': mae,
     }
     return render(request, 'data_app/index.html', context)

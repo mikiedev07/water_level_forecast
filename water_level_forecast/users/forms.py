@@ -12,8 +12,5 @@ class RegisterForm(UserCreationForm):
 
 
 class LoginForm(forms.Form):
-    email = forms.EmailField(max_length=200, help_text='Required')
-
-    class Meta:
-        model = User
-        fields = ('email', 'password')
+    username = forms.CharField(max_length=50, help_text='Required')
+    password = forms.CharField(widget=forms.PasswordInput)

@@ -10,12 +10,19 @@
 <div class="container" style="margin-top: 50px;">
         <div class="row justify-content-center">
             <div class="col-md-5 shadow-sm p-3 mb-5 bg-white rounded">
-                <h2>Signup</h2>
+                <h2>Login</h2>
+                {% if messages %}
+                    <ul class="messages">
+                        {% for message in messages %}
+                            <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+                        {% endfor %}
+                    </ul>
+                {% endif %}
                 <form method="post">
                     {% csrf_token %}
                     <div class="form-group">
-                        <label for="email">Email:</label>
-                        <input type="email" class="form-control" id="email" placeholder="Enter email" name="email">
+                        <label for="username">Username:</label>
+                        <input type="text" class="form-control" id="username" placeholder="Enter username" name="username">
                     </div>
                     <div class="form-group">
                         <label for="pwd1">Password:</label>
