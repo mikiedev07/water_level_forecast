@@ -20,6 +20,10 @@
                 {% endif %}
                 <form method="post">
                     {% csrf_token %}
+                    <!-- Отображение ошибок полей -->
+                    {% if error %}
+                        <p class="text-danger h6">- {{ error }}</p>
+                    {% endif %}
                     <div class="form-group">
                         <label for="username">Username:</label>
                         <input type="text" class="form-control" id="username" placeholder="Enter username" name="username">

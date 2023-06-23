@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Параметры системы</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
+    <style>
+        .form-column {
+            margin-bottom: 20px;
+        }
+
+        .form-column form {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .form-column form .form-group {
+            margin-bottom: 10px;
+        }
+
+        .form-column form label {
+            text-align: right;
+        }
+
+        .form-column form .btn-primary {
+            width: 100%;
+            margin-top: 10px;
+        }
+
+        .save-button {
+            margin-top: 20px;
+        }
+
+        .additional-buttons {
+            margin-top: 10px;
+            display: flex;
+            justify-content: space-between;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'chart' %}">График</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'signout' %}">Выйти из аккаунта</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+    <div class="container" style="margin-top: 50px; margin-bottom: 50px;">
+        {% if messages %}
+            {% for message in messages %}
+                <div class = "alert alert-{{ message.tags }}">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        {% endif %}
+        <div class="row">
+<!--            <div class="col-1"></div>-->
+
+            <div class="col-md-6 form-column">
+                <h2>Параметры эксп. сглаживания</h2>
+                <form method="POST">
+                    {% csrf_token %}
+                    <div class="form-group float-right">
+                        <label class="text-right" for="id_interp_frequency">Дискрета для интерполяции:</label>
+<!--                        <p>Дискрета для интерполяции:</p>-->
+                        {{ form_exp_smoothing_params.interp_frequency }}
+                    </div>
+                    <div class="form-group float-right">
+                        <label for="id_seasonal_periods">Сезонность ряда:</label>
+<!--                        <p>Сезонность ряда:</p>-->
+                        {{ form_exp_smoothing_params.seasonal_periods }}
+                    </div>
+                    <div class="form-group float-right">
+                        <label for="id_forecast_horizon">Горизонт прогноза:</label>
+<!--                        <p>Горизонт прогноза:</p>-->
+                        {{ form_exp_smoothing_params.forecast_horizon }}
+                    </div>
+                </div>
+
+<!--                <div class="col-1"></div>-->
+
+                <div class="col-md-6 form-column">
+                    <h2>Метрики эксп. сглаживания</h2>
+                    <fieldset disabled>
+                    <div class="form-group">
+                        <label for="id_mae">MAE:</label>
+<!--                        <p>MAE:</p>-->
+                        {{ form_exp_smoothing_metrics.mae }}
+                    </div>
+                    <div class="form-group">
+                        <label for="id_rmse">RMSE:</label>
+<!--                        <p>RMSE:</p>-->
+                        {{ form_exp_smoothing_metrics.rmse }}
+                    </div>
+                    <div class="form-group">
+                        <label for="id_mape">MAPE:</label>
+<!--                        <p>MAPE:</p>-->
+                        {{ form_exp_smoothing_metrics.mape }}
+                    </div>
+                    <div class="form-group">
+                        <label for="id_smape">SMAPE:</label>
+<!--                        <p>SMAPE:</p>-->
+                        {{ form_exp_smoothing_metrics.smape }}
+                    </div>
+                    </fieldset>
+                </div>
+
+<!--                <div class="col-1"></div>-->
+            </div>
+
+            <div class="row">
+<!--                <div class="col-1"></div>-->
+
+                <div class="col-md-6 form-column">
+                    <h2>Параметры GRU</h2>
+                    <div class="form-group">
+                        <label for="id_lookback">Кол-во интервалов в прошлом:</label>
+<!--                        <p>Кол-во интервалов в прошлом:</p>-->
+                        {{ form_gru_params.lookback }}
+                    </div>
+                    <div class="form-group">
+                        <label for="id_delay">Кол-во интервалов в будущем:</label>
+<!--                        <p>Кол-во интервалов в будущем:</p>-->
+                        {{ form_gru_params.delay }}
+                    </div>
+                    <div class="form-group">
+                        <label for="id_step">Шаг:</label>
+<!--                        <p>Шаг:</p>-->
+                        {{ form_gru_params.step }}
+                    </div>
+                    <div class="form-group">
+                        <label for="id_batch_size">Размер пакета:</label>
+<!--                        <p>Размер пакета:</p>-->
+                        {{ form_gru_params.batch_size }}
+                    </div>
+                    <div class="form-group">
+                        <label for="id_hidden_neurons">Кол-во скрытых нейронов в слое:</label>
+<!--                        <p>Кол-во скрытых нейронов в слое:</p>-->
+                        {{ form_gru_params.hidden_neurons }}
+                    </div>
+                    <div class="form-group">
+                        <label for="id_dropout">Прореживание:</label>
+<!--                        <p>Прореживание:</p>-->
+                        {{ form_gru_params.dropout }}
+                    </div>
+                    <div class="form-group">
+                        <label for="id_recurrent_dropout">Рекуррентное прореживание:</label>
+<!--                        <p>Рекуррентное прореживание:</p>-->
+                        {{ form_gru_params.recurrent_dropout }}
+                    </div>
+                    <div class="form-group">
+                        <label for="id_steps_per_epoch">Кол-во шагов в эпохе:</label>
+<!--                        <p>Кол-во шагов в эпохе:</p>-->
+                        {{ form_gru_params.steps_per_epoch }}
+                    </div>
+                    <div class="form-group">
+                        <label for="id_epochs">Кол-во эпох:</label>
+<!--                        <p>Кол-во эпох:</p>-->
+                        {{ form_gru_params.epochs }}
+                    </div>
+                </div>
+
+<!--                <div class="col-1"></div>-->
+
+                <div class="col-md-6 form-column">
+                    <h2>Метрики GRU</h2>
+                    <fieldset disabled>
+                    <div class="form-group">
+                        <label for="id_mae">MAE:</label>
+<!--                        <p>MAE</p>-->
+                        {{ form_gru_metrics.mae }}
+                    </div>
+                    </fieldset>
+                </div>
+
+<!--                <div class="col-1"></div>-->
+            </div>
+
+            <div class="save-button">
+                <button type="submit" class="btn btn-primary" name="save_button">Сохранить</button>
+            </div>
+
+            <div class="additional-buttons">
+                <div class="col-">
+                    <button class="btn btn-secondary" name="get_data">Получить данные (30 сек.)</button>
+                </div>
+                <div>
+                    <button class="btn btn-secondary" name="data_processing">Обработать данные (2-3 мин.)</button>
+                </div>
+                <div>
+                    <button class="btn btn-secondary" name="exp_button">Обучить эксп. (5-10 мин.)</button>
+                </div>
+                <div>
+                    <button class="btn btn-secondary" name="gru_button">Обучить GRU (1-1.5 часа)</button>
+                </div>
+            </div>
+        </form>
+    </div>
+<!--    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>-->
+
+<!--    <script>-->
+<!--        // Функция для отправки AJAX запроса на сервер-->
+<!--        function checkScriptExecution() {-->
+<!--            $.ajax({-->
+<!--                url: 'http://127.0.0.1:8000/users/analyst-panel/',  // URL для обработки запроса на сервере-->
+<!--                method: 'GET',-->
+<!--                success: function(response) {-->
+<!--                    // Обработка ответа от сервера-->
+<!--                    if (response.is_script_executed) {-->
+<!--                        // Скрипт выполнен-->
+<!--                        // Добавьте свою логику для обработки выполнения скрипта-->
+<!--                        console.log("Скрипт выполнен");-->
+<!--                    } else {-->
+<!--                        // Скрипт еще не выполнен-->
+<!--                        // Вы можете выполнить повторный запрос через некоторое время-->
+<!--                        setTimeout(checkScriptExecution, 60000);  // Повторный запрос через 5 секунд-->
+<!--                    }-->
+<!--                },-->
+<!--                error: function(xhr, textStatus, error) {-->
+<!--                    // Обработка ошибки AJAX запроса-->
+<!--                    console.log("Ошибка при выполнении AJAX запроса:", error);-->
+<!--                }-->
+<!--            });-->
+<!--        }-->
+
+<!--        // Вызов функции для первоначального выполнения запроса-->
+<!--        checkScriptExecution();-->
+<!--    </script>-->
+</body>
+</html>

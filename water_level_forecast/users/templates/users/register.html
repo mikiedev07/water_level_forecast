@@ -20,6 +20,13 @@
                 <h2>Signup</h2>
                 <form method="post">
                     {% csrf_token %}
+
+                    <!-- Отображение ошибок полей -->
+                    {% for field_errors in errors.values %}
+                        {% for error in field_errors %}
+                            <p class="text-danger h6">- {{ error }}</p>
+                        {% endfor %}
+                    {% endfor %}
                     <div class="form-group">
                         <label for="username">Username:</label>
                         <input type="text" class="form-control" id="username" placeholder="Enter username" name="username">

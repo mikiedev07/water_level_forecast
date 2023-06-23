@@ -10,20 +10,20 @@
 </head>
 <body>
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
-        The water level of Lake Issyk-Kul
+        Уровень воды в озере Иссык-Куль
         <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav ml-auto">
                 <li class="nav-item">
-                    <a class="nav-link" href="#">About</a>
+                    <a class="nav-link" href="#">О нас</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="#">Contact</a>
+                    <a class="nav-link" href="#">Контакты</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="{% url 'signout' %}">Logout</a>
+                    <a class="nav-link" href="{% url 'signup' %}">Создать аккаунт</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="{% url 'signup' %}">Register</a>
+                    <a class="nav-link" href="{% url 'signout' %}">Выйти из аккаунта</a>
                 </li>
             </ul>
         </div>
@@ -33,6 +33,9 @@
     <div class="chart-container" style="width: 1500px; margin: auto;">
         <canvas id="myChart"></canvas>
     </div>
+    <div class="chart-container" style="width: 1500px; margin: auto; margin-bottom: 50px;">
+        <canvas id="myChart1"></canvas>
+    </div>
 
     <!-- JavaScript код для создания графика -->
     <script>
@@ -40,10 +43,10 @@
         var myChart = new Chart(ctx, {
             type: 'line',
             data: {
-                labels: {{ dates|safe }},
+                labels: {{ exp_dates|safe }},
                 datasets: [{
                     label: 'ExpSmoothing + ExpSmoothingForecast (MAE: {{ mae }})',
-                    data: {{ values|safe }},
+                    data: {{ exp_values|safe }},
                     backgroundColor: 'rgba(255, 99, 132, 0.2)',
                     borderColor: 'rgba(255, 99, 132, 1)',
                     borderWidth: 1
@@ -70,6 +73,59 @@
                 afterDraw: function (chart) {
                     var linePlugin = chart.options.plugins.verticalLinePlugin;
                     var ctx = chart.ctx;
+                    var xValue = '2022-6';
+                    var xScale = chart.scales['x'];
+                    var yScale = chart.scales['y'];
+                    var xPixel = xScale.getPixelForValue(xValue);
+                    var topMargin = chart.options.layout.padding.top;
+                    var bottomMargin = chart.options.layout.padding.bottom;
+                    var chartHeight = chart.height - topMargin - bottomMargin;
+
+                    ctx.save();
+                    ctx.beginPath();
+                    ctx.strokeStyle = linePlugin.lineColor;
+                    ctx.lineWidth = linePlugin.lineWidth;
+                    ctx.moveTo(xPixel, topMargin);
+                    ctx.lineTo(xPixel, topMargin + chartHeight);
+                    ctx.stroke();
+                    ctx.restore();
+                }
+            }]
+        });
+        var ctx1 = document.getElementById('myChart1').getContext('2d');
+        var myChart1 = new Chart(ctx1, {
+            type: 'line',
+            data: {
+                labels: {{ gru_dates|safe }},
+                datasets: [{
+                    label: 'GRU (MAE: 0.33)',
+                    data: {{ gru_values|safe }},
+                    backgroundColor: 'rgba(255, 99, 132, 0.2)',
+                    borderColor: 'rgba(255, 99, 132, 1)',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: false,
+                        suggestedMin: 1605.5,  // Минимальное значение на оси y
+                        suggestedMax: 1606   // Максимальное значение на оси y
+                    }
+                },
+                plugins: {
+                    verticalLinePlugin: {
+                        xValue: '2022-06',  // Значение x-координаты для вертикальной линии
+                        lineColor: 'rgba(0, 0, 255, 0.5)',  // Цвет вертикальной линии
+                        lineWidth: 2  // Толщина вертикальной линии
+                    }
+                }
+            },
+            plugins: [{
+                id: 'verticalLinePlugin',
+                afterDraw: function (chart) {
+                    var linePlugin = chart.options.plugins.verticalLinePlugin;
+                    var ctx1 = chart.ctx1;
                     var xValue = '2022-6';
                     var xScale = chart.scales['x'];
                     var yScale = chart.scales['y'];
